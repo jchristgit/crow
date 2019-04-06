@@ -39,7 +39,7 @@ defmodule Crow.Worker do
       |> to_charlist()
 
     matching_plugin =
-      Crow
+      :crow
       |> :application.get_env(:plugins, [])
       |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
       |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
@@ -69,7 +69,7 @@ defmodule Crow.Worker do
       |> to_charlist()
 
     matching_plugin =
-      Crow
+      :crow
       |> :application.get_env(:plugins, [])
       |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
       |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
@@ -94,7 +94,7 @@ defmodule Crow.Worker do
 
   def handle_info({:tcp, sock, "list" <> _rest}, state) do
     plugin_line =
-      Crow
+      :crow
       |> :application.get_env(:plugins, [])
       |> Stream.map(&Crow.Helpers.plugin_name/1)
       |> Stream.intersperse(' ')

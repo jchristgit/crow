@@ -6,6 +6,12 @@ and this project adheres to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## Unreleased
+### Fixed
+- Application configuration is now pulled via the `:crow` application key (in
+  `Application.get_env` calls) instead of `Crow`, preventing a compiler warning.
+
+
 ## v0.1.1 - 2019-04-06
 ### Fixed
 - Adjust output of initial banner to be what `munin-update` expects.

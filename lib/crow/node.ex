@@ -8,7 +8,7 @@ defmodule Crow.Node do
 
   @doc false
   def init(_options) do
-    port = :application.get_env(Crow, :port, 4949)
+    port = :application.get_env(:crow, :port, 4949)
 
     case :gen_tcp.listen(port, [:binary, {:reuseaddr, true}]) do
       {:ok, sock} ->
