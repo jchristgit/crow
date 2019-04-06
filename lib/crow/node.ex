@@ -1,4 +1,4 @@
-defmodule Raven.Node do
+defmodule Crow.Node do
   require Logger
   use GenServer
 
@@ -8,7 +8,7 @@ defmodule Raven.Node do
 
   @doc false
   def init(_options) do
-    port = :application.get_env(Raven, :port, 4949)
+    port = :application.get_env(Crow, :port, 4949)
 
     case :gen_tcp.listen(port, [:binary, {:reuseaddr, true}]) do
       {:ok, sock} ->
@@ -26,8 +26,8 @@ defmodule Raven.Node do
 
     {:ok, worker} =
       DynamicSupervisor.start_child(
-        Raven.ConnectionSupervisor,
-        {Raven.Worker, [[conn]]}
+        Crow.ConnectionSupervisor,
+        {Crow.Worker, [[conn]]}
       )
 
     :ok = :gen_tcp.controlling_process(conn, worker)

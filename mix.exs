@@ -1,9 +1,9 @@
-defmodule Raven.MixProject do
+defmodule Crow.MixProject do
   use Mix.Project
 
   def project do
     [
-      app: :raven,
+      app: :crow,
       version: "0.1.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
@@ -15,7 +15,7 @@ defmodule Raven.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {Raven.Application, []}
+      mod: {Crow.Application, []}
     ]
   end
 

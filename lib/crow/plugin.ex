@@ -1,4 +1,4 @@
-defmodule Raven.Plugin do
+defmodule Crow.Plugin do
   @moduledoc """
   The behaviour all configured plugins should implement.
   """
@@ -43,7 +43,7 @@ defmodule Raven.Plugin do
 
   @doc """
   Return the name of the plugin displayed to connections.
-  By default, a name is generated using `Raven.Helpers.plugin_name/1`.
+  By default, a name is generated using `Crow.Helpers.plugin_name/1`.
   """
   @callback name() :: String.t()
 

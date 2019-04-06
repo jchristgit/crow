@@ -1,4 +1,4 @@
-defmodule Raven.Application do
+defmodule Crow.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -8,11 +8,11 @@ defmodule Raven.Application do
   def start(_type, _args) do
     # List all child processes to be supervised
     children = [
-      # Starts a worker by calling: Raven.Worker.start_link(arg)
-      Raven.Node,
+      # Starts a worker by calling: Crow.Worker.start_link(arg)
+      Crow.Node,
       {DynamicSupervisor,
        strategy: :one_for_one,
-       name: Raven.ConnectionSupervisor,
+       name: Crow.ConnectionSupervisor,
        restart: :temporary,
        max_restarts: 0}
     ]

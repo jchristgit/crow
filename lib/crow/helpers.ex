@@ -1,8 +1,8 @@
-defmodule Raven.Helpers do
+defmodule Crow.Helpers do
   @doc """
   Obtain a munin-friendly name for a plugin based on its module name.
 
-  If the plugin defines `c:Raven.Plugin.name/0`, the result of it is
+  If the plugin defines `c:Crow.Plugin.name/0`, the result of it is
   used instead.
 
   ## Arguments
@@ -11,9 +11,9 @@ defmodule Raven.Helpers do
 
   ## Examples
 
-      iex> Raven.Helpers.plugin_name(MyApp.CrowPlugins.WebRequests)
+      iex> Crow.Helpers.plugin_name(MyApp.CrowPlugins.WebRequests)
       'web_requests'
-      iex> Raven.Helpers.plugin_name(MyApp.CrowPlugins.Uptime)
+      iex> Crow.Helpers.plugin_name(MyApp.CrowPlugins.Uptime)
       'uptime'
   """
   @spec plugin_name(module()) :: charlist()
