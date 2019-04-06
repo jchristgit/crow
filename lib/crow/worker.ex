@@ -32,6 +32,20 @@ defmodule Crow.Worker do
     {:noreply, state}
   end
 
+  def handle_info({:tcp, sock, "list\n"}, state) do
+    plugin_line =
+      Crow
+      |> :application.get_env(:plugins, [])
+      |> Stream.map(&Crow.Helpers.plugin_name/1)
+      |> Stream.intersperse(' ')
+      |> Enum.to_list()
+      |> :lists.concat()
+      |> :lists.append('\n')
+
+    :ok = :gen_tcp.send(sock, plugin_line)
+    {:noreply, state}
+  end
+
   def handle_info({:tcp, sock, "nodes\n"}, state) do
     {:ok, hostname} = :inet.gethostname()
     :ok = :gen_tcp.send(sock, '#{hostname}\n.\n')
@@ -50,7 +64,7 @@ defmodule Crow.Worker do
   end
 
   def handle_info({:tcp, sock, _message}, state) do
-    :ok = :gen_tcp.send(sock, '# unknown command. try cap, nodes, version, quit\n')
+    :ok = :gen_tcp.send(sock, '# unknown command. try cap, list, nodes, version, quit\n')
     {:noreply, state}
   end
 
