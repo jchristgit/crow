@@ -2,6 +2,9 @@ defmodule Crow.Helpers do
   @doc """
   Obtain a munin-friendly name for a plugin based on its module name.
 
+  If the plugin defines `c:Crow.Plugin.name/0`, the result of it is
+  used instead.
+
   ## Arguments
 
     - `module`: The module for which a name should be returned.
@@ -9,15 +12,20 @@ defmodule Crow.Helpers do
   ## Examples
 
       iex> Crow.Helpers.plugin_name(MyApp.CrowPlugins.WebRequests)
-      "web_requests"
+      'web_requests'
       iex> Crow.Helpers.plugin_name(MyApp.CrowPlugins.Uptime)
-      "uptime"
+      'uptime'
   """
-  @spec plugin_name(module()) :: String.t()
+  @spec plugin_name(module()) :: charlist()
   def plugin_name(module) do
-    module
-    |> Module.split()
-    |> :lists.last()
-    |> Macro.underscore()
+    if function_exported?(module, :name, 0) do
+      module.name()
+    else
+      module
+      |> Module.split()
+      |> :lists.last()
+      |> Macro.underscore()
+      |> to_charlist()
+    end
   end
 end
