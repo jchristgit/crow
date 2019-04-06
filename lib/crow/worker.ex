@@ -27,7 +27,7 @@ defmodule Crow.Worker do
 
   @doc false
   @impl true
-  def handle_info({:tcp, sock, "cap\n"}, state) do
+  def handle_info({:tcp, sock, "cap" <> _rest}, state) do
     :ok = :gen_tcp.send(sock, 'cap\n')
     {:noreply, state}
   end
@@ -92,7 +92,7 @@ defmodule Crow.Worker do
     {:noreply, state}
   end
 
-  def handle_info({:tcp, sock, "list\n"}, state) do
+  def handle_info({:tcp, sock, "list" <> _rest}, state) do
     plugin_line =
       Crow
       |> :application.get_env(:plugins, [])
