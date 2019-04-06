@@ -48,8 +48,45 @@ defmodule Crow.Worker do
       :gen_tcp.send(sock, '# unknown plugin\n')
     else
       {plugin, ^plugin_name} = matching_plugin
-      Enum.each(plugin.config(), fn line -> :ok = :gen_tcp.send(sock, line ++ '\n') end)
-      :ok = :gen_tcp.send(sock, '.\n')
+
+      response =
+        plugin.config()
+        |> Stream.intersperse('\n')
+        |> Enum.to_list()
+        |> :lists.concat()
+        |> :lists.append('\n.\n')
+
+      :ok = :gen_tcp.send(sock, response)
+    end
+
+    {:noreply, state}
+  end
+
+  def handle_info({:tcp, sock, "fetch " <> rest}, state) do
+    plugin_name =
+      rest
+      |> String.trim()
+      |> to_charlist()
+
+    matching_plugin =
+      Crow
+      |> :application.get_env(:plugins, [])
+      |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
+      |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
+
+    if matching_plugin == nil do
+      :gen_tcp.send(sock, '# unknown plugin\n.\n')
+    else
+      {plugin, ^plugin_name} = matching_plugin
+
+      response =
+        plugin.values()
+        |> Stream.intersperse('\n')
+        |> Enum.to_list()
+        |> :lists.concat()
+        |> :lists.append('\n.\n')
+
+      :ok = :gen_tcp.send(sock, response)
     end
 
     {:noreply, state}
@@ -87,7 +124,12 @@ defmodule Crow.Worker do
   end
 
   def handle_info({:tcp, sock, _message}, state) do
-    :ok = :gen_tcp.send(sock, '# unknown command. try cap, config, list, nodes, version, quit\n')
+    :ok =
+      :gen_tcp.send(
+        sock,
+        '# unknown command. try cap, config, fetch, list, nodes, version, quit\n'
+      )
+
     {:noreply, state}
   end
 
