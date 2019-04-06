@@ -7,7 +7,10 @@ defmodule Crow.MixProject do
       version: "0.1.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
-      deps: deps()
+      source_url: "https://github.com/jchristgit/crow",
+      homepage_url: "https://github.com/jchristgit/crow",
+      deps: deps(),
+      package: package()
     ]
   end
 
@@ -16,6 +19,18 @@ defmodule Crow.MixProject do
     [
       extra_applications: [:logger],
       mod: {Crow.Application, []}
+    ]
+  end
+
+  def package do
+    [
+      description: "A munin node implementation written in Elixir",
+      licenses: ["ISC"],
+      links: %{
+        "Documentation" => "https://hexdocs.pm/crow",
+        "GitHub" => "https://github.com/jchristgit/crow"
+      },
+      maintainers: ["Johannes Christ"]
     ]
   end
 
