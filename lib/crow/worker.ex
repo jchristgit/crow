@@ -20,7 +20,7 @@ defmodule Crow.Worker do
   def handle_continue(:send_banner, conn) do
     {:ok, {ip, port}} = :inet.peername(conn)
     {:ok, hostname} = :inet.gethostname()
-    :ok = :gen_tcp.send(conn, '# crow node at #{hostname}\n')
+    :ok = :gen_tcp.send(conn, '# munin node at #{hostname}\n')
     Logger.info("CONNECT TCP peer #{:inet.ntoa(ip)}:#{port}")
     {:noreply, conn}
   end
