@@ -1,4 +1,4 @@
-defmodule Crow.Worker do
+defmodule Raven.Worker do
   @moduledoc false
   @version Mix.Project.config()[:version]
 
@@ -20,14 +20,14 @@ defmodule Crow.Worker do
   def handle_continue(:send_banner, conn) do
     {:ok, {ip, port}} = :inet.peername(conn)
     {:ok, hostname} = :inet.gethostname()
-    :ok = :gen_tcp.send(conn, '# crow node at #{hostname}\n')
+    :ok = :gen_tcp.send(conn, '# munin node at #{hostname}\n')
     Logger.info("CONNECT TCP peer #{:inet.ntoa(ip)}:#{port}")
     {:noreply, conn}
   end
 
   @doc false
   @impl true
-  def handle_info({:tcp, sock, "cap\n"}, state) do
+  def handle_info({:tcp, sock, "cap" <> rest}, state) do
     :ok = :gen_tcp.send(sock, 'cap\n')
     {:noreply, state}
   end
@@ -39,9 +39,9 @@ defmodule Crow.Worker do
       |> to_charlist()
 
     matching_plugin =
-      Crow
+      Raven
       |> :application.get_env(:plugins, [])
-      |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
+      |> Stream.map(fn plugin -> {plugin, Raven.Helpers.plugin_name(plugin)} end)
       |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
 
     if matching_plugin == nil do
@@ -69,9 +69,9 @@ defmodule Crow.Worker do
       |> to_charlist()
 
     matching_plugin =
-      Crow
+      Raven
       |> :application.get_env(:plugins, [])
-      |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
+      |> Stream.map(fn plugin -> {plugin, Raven.Helpers.plugin_name(plugin)} end)
       |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
 
     if matching_plugin == nil do
@@ -92,11 +92,11 @@ defmodule Crow.Worker do
     {:noreply, state}
   end
 
-  def handle_info({:tcp, sock, "list\n"}, state) do
+  def handle_info({:tcp, sock, "list" <> rest}, state) do
     plugin_line =
-      Crow
+      Raven
       |> :application.get_env(:plugins, [])
-      |> Stream.map(&Crow.Helpers.plugin_name/1)
+      |> Stream.map(&Raven.Helpers.plugin_name/1)
       |> Stream.intersperse(' ')
       |> Enum.to_list()
       |> :lists.concat()
@@ -113,7 +113,7 @@ defmodule Crow.Worker do
   end
 
   def handle_info({:tcp, sock, "version\n"}, state) do
-    :ok = :gen_tcp.send(sock, 'crow node version #{@version}\n')
+    :ok = :gen_tcp.send(sock, 'raven node version #{@version}\n')
     {:noreply, state}
   end
 
