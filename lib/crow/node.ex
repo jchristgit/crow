@@ -8,9 +8,16 @@ defmodule Crow.Node do
 
   @doc false
   def init(_options) do
+    ip = :application.get_env(:crow, :ip, nil)
     port = :application.get_env(:crow, :port, 4949)
 
-    case :gen_tcp.listen(port, [:binary, {:reuseaddr, true}]) do
+    listen_opts = if ip == nil do
+      [:binary, {:reuseaddr, true}]
+    else
+      [:binary, {:reuseaddr, true}, {:ip, ip}]
+    end
+
+    case :gen_tcp.listen(port, listen_opts) do
       {:ok, sock} ->
         Logger.debug("Listening for connections on port `#{port}`.")
 
