@@ -7,6 +7,11 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 
 ## Unreleased
+### Changed
+- Connection worker processes are no longer spawned under a supervisor. This
+  also fixes the issue of one connection terminating also terminating other
+  connections.
+
 ### Fixed
 - Application configuration is now pulled via the `:crow` application key (in
   `Application.get_env` calls) instead of `Crow`, preventing a compiler warning.

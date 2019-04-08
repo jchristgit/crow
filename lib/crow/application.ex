@@ -9,12 +9,7 @@ defmodule Crow.Application do
     # List all child processes to be supervised
     children = [
       # Starts a worker by calling: Crow.Worker.start_link(arg)
-      Crow.Node,
-      {DynamicSupervisor,
-       strategy: :one_for_one,
-       name: Crow.ConnectionSupervisor,
-       restart: :temporary,
-       max_restarts: 0}
+      Crow.Node
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

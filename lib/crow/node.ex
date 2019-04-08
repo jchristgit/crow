@@ -11,11 +11,12 @@ defmodule Crow.Node do
     ip = :application.get_env(:crow, :ip, nil)
     port = :application.get_env(:crow, :port, 4949)
 
-    listen_opts = if ip == nil do
-      [:binary, {:reuseaddr, true}]
-    else
-      [:binary, {:reuseaddr, true}, {:ip, ip}]
-    end
+    listen_opts =
+      if ip == nil do
+        [:binary, {:reuseaddr, true}]
+      else
+        [:binary, {:reuseaddr, true}, {:ip, ip}]
+      end
 
     case :gen_tcp.listen(port, listen_opts) do
       {:ok, sock} ->
@@ -31,11 +32,7 @@ defmodule Crow.Node do
   def handle_continue(connection_count, sock) do
     {:ok, conn} = :gen_tcp.accept(sock)
 
-    {:ok, worker} =
-      DynamicSupervisor.start_child(
-        Crow.ConnectionSupervisor,
-        {Crow.Worker, [[conn]]}
-      )
+    {:ok, worker} = GenServer.start(Crow.Worker, conn)
 
     :ok = :gen_tcp.controlling_process(conn, worker)
     Logger.debug("Accepted connection ##{connection_count} on worker #{inspect(worker)}.")
