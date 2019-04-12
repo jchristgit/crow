@@ -1,4 +1,6 @@
 defmodule Crow.Helpers do
+  @moduledoc false
+
   @doc """
   Obtain a munin-friendly name for a plugin based on its module name.
 
