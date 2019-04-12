@@ -1,4 +1,6 @@
 defmodule Crow.Node do
+  @moduledoc false
+
   require Logger
   use GenServer
 
