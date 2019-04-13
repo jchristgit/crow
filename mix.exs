@@ -10,6 +10,7 @@ defmodule Crow.MixProject do
       source_url: "https://github.com/jchristgit/crow",
       homepage_url: "https://github.com/jchristgit/crow",
       deps: deps(),
+      docs: docs(),
       package: package()
     ]
   end
@@ -22,7 +23,19 @@ defmodule Crow.MixProject do
     ]
   end
 
-  def package do
+  # Run "mix help deps" to learn about dependencies.
+  defp deps do
+    [
+      # Linting dependencies
+      {:credo, "~> 1.0", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
+
+      # Documentation dependencies
+      {:ex_doc, "~> 0.20", only: :dev, runtime: false}
+    ]
+  end
+
+  defp package do
     [
       description: "A munin node implementation written in Elixir",
       licenses: ["ISC"],
@@ -34,15 +47,12 @@ defmodule Crow.MixProject do
     ]
   end
 
-  # Run "mix help deps" to learn about dependencies.
-  defp deps do
+  defp docs do
     [
-      # Linting dependencies
-      {:credo, "~> 1.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
-
-      # Documentation dependencies
-      {:ex_doc, "~> 0.20", only: :dev, runtime: false}
+      main: "Introduction",
+      extras: [
+        "guides/Introduction.md"
+      ]
     ]
   end
 end
