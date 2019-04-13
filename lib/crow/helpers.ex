@@ -1,11 +1,14 @@
 defmodule Crow.Helpers do
-  @moduledoc false
+  @moduledoc "Helper functions used across crow."
 
   @doc """
   Obtain a munin-friendly name for a plugin based on its module name.
 
   If the plugin defines `c:Crow.Plugin.name/0`, the result of it is
   used instead.
+
+  Note that generating a plugin name for Erlang modules is
+  currently not supported.
 
   ## Arguments
 
