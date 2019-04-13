@@ -5,10 +5,6 @@ defmodule Crow.Worker do
   require Logger
   use GenServer
 
-  def start_link([[conn]]) do
-    GenServer.start_link(__MODULE__, conn)
-  end
-
   @doc false
   @impl true
   def init(conn) do
