@@ -75,12 +75,6 @@ defmodule Crow.Plugin do
 
   @doc """
   Return the name of the plugin displayed to peers.
-
-  If this callback is not defined, a name is generated based on the
-  module name of the plugin. See `Crow.Helpers.plugin_name/1` for more
-  information.
   """
   @callback name() :: charlist()
-
-  @optional_callbacks [name: 0]
 end
