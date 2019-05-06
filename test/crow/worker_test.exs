@@ -93,7 +93,9 @@ defmodule Crow.WorkerTest do
   describe "unknown commands" do
     test "display help", %{socket: socket} do
       :ok = :gen_tcp.send(socket, 'totally_not_a_command\n')
-      assert_receive {:tcp, ^socket, "# unknown command. try cap, config, fetch, list, nodes, version, quit\n"}
+
+      assert_receive {:tcp, ^socket,
+                      "# unknown command. try cap, config, fetch, list, nodes, version, quit\n"}
     end
   end
 end

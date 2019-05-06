@@ -113,7 +113,8 @@ defmodule Crow.Worker do
     {:noreply, state}
   end
 
-  def handle_info({:tcp, sock, "quit\n"}, state) do
+  # We do not really care about the rest of the command here.
+  def handle_info({:tcp, sock, "quit" <> _rest}, state) do
     :ok = :gen_tcp.close(sock)
     Logger.debug("Closed socket due to user command.")
     {:stop, :normal, state}
