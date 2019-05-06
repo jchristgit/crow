@@ -33,6 +33,10 @@ in the BEAM:
 
 ```elixir
 defmodule MyApp.CrowPlugins.Processes do
+  def name do
+    'beam_process_count'
+  end
+
   def config do
     [
       'graph_title Total processes',

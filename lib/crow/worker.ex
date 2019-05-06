@@ -37,16 +37,13 @@ defmodule Crow.Worker do
     matching_plugin =
       :crow
       |> :application.get_env(:plugins, [])
-      |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
-      |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
+      |> Enum.find(&(&1.name() == plugin_name))
 
     if matching_plugin == nil do
       :gen_tcp.send(sock, '# unknown plugin\n')
     else
-      {plugin, ^plugin_name} = matching_plugin
-
       response =
-        plugin.config()
+        matching_plugin.config()
         |> Stream.intersperse('\n')
         |> Enum.to_list()
         |> :lists.concat()
@@ -67,16 +64,13 @@ defmodule Crow.Worker do
     matching_plugin =
       :crow
       |> :application.get_env(:plugins, [])
-      |> Stream.map(fn plugin -> {plugin, Crow.Helpers.plugin_name(plugin)} end)
-      |> Enum.find(fn {_plugin, name} -> name == plugin_name end)
+      |> Enum.find(&(&1.name() == plugin_name))
 
     if matching_plugin == nil do
       :gen_tcp.send(sock, '# unknown plugin\n.\n')
     else
-      {plugin, ^plugin_name} = matching_plugin
-
       response =
-        plugin.values()
+        matching_plugin.values()
         |> Stream.intersperse('\n')
         |> Enum.to_list()
         |> :lists.concat()
@@ -92,7 +86,7 @@ defmodule Crow.Worker do
     plugin_line =
       :crow
       |> :application.get_env(:plugins, [])
-      |> Stream.map(&Crow.Helpers.plugin_name/1)
+      |> Stream.map(& &1.name())
       |> Stream.intersperse(' ')
       |> Enum.to_list()
       |> :lists.concat()

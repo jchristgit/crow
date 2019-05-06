@@ -29,6 +29,9 @@ defmodule Crow.Plugin do
   Instead of printing to standard output, these return a list of charlists which
   is then sent to the peer via TCP.
 
+  An additional callback, `c:name/0`, specifies the name of the plugin shown to
+  Munin. This must be unique amongst all plugins configured on the node.
+
   ## Community plugins
 
   Plugins for the crow node can be found in the
@@ -75,6 +78,12 @@ defmodule Crow.Plugin do
 
   @doc """
   Return the name of the plugin displayed to peers.
+
+  ## Example
+
+      def name do
+        'my_plugin'
+      end
   """
   @callback name() :: charlist()
 end
