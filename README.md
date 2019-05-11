@@ -27,4 +27,28 @@ def deps do
 end
 ```
 
+After adding Crow to your Elixir app, register the server running it in your
+Munin master configuration. For instance, if you have an Elixir app with Crow
+listening on port `4949`, the following configuration would suffice (assuming
+you also installed a munin node):
+
+```ini
+[myapp]
+    address 127.0.0.1
+```
+
+However, it's recommended to run Crow alongside a regular Munin node, which
+tends to listen on `4949` itself. Therefore, assuming you want to have
+information from both your server and the app, you could use a configuration
+like the following:
+
+```ini
+[example.com]
+    address 127.0.0.1
+
+[example.com;myapp]
+    address 127.0.0.1
+    port    4950
+```
+
 <!-- vim: set textwidth=80 sw=2 ts=2: -->
