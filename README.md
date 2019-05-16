@@ -3,6 +3,13 @@
 Crow implements an extensible [Munin](http://munin-monitoring.org/) node in
 Elixir. Extensive documentation can be found on https://hexdocs.pm/crow.
 
+Using Crow, you can set up informative graphs about your Elixir applications
+quickly and easily. For instance, this is what the `CrowPlugins.BEAM.Memory`
+and `CrowPlugins.BEAM.IO` plugins generate for you to view in Munin:
+
+![daily & weekly memory usage & bytes via port in / out
+graphs](./static/crow_plugins_graph.png)
+
 ## Overview
 
 Crow has an acceptor process that deals with listening to
