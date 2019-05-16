@@ -4,7 +4,7 @@ defmodule Crow.MixProject do
   def project do
     [
       app: :crow,
-      version: "0.1.2",
+      version: "0.2.0",
       elixir: "~> 1.8",
       start_permanent: Mix.env() == :prod,
       source_url: "https://github.com/jchristgit/crow",

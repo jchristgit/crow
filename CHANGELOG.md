@@ -8,6 +8,10 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 ### Changed
+
+
+## v0.1.2 - 2019-05-16
+### Changed
 - Connection worker processes are no longer spawned under a supervisor. This
   also fixes the issue of one connection terminating also terminating other
   connections.
