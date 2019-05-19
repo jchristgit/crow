@@ -8,6 +8,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 ### Changed
+- Log connection of peers at `DEBUG` log level.
 
 
 ## v0.1.2 - 2019-05-16
