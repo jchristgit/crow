@@ -60,17 +60,14 @@ defmodule Crow.Plugin do
   """
   @callback config() :: [charlist()]
 
-  # We need the sigil here to prevent `#{length(:erlang.processes())}`
-  # from being evaluated at compilation time, since this is supposed
-  # to go into the docs literally.
-  @doc ~S"""
+  @doc """
   Display values for this plugin.
 
   ## Example
 
       def values do
         [
-          'processes.value #{length(:erlang.processes())}'
+          'processes.value #\{length(:erlang.processes())\}'
         ]
       end
   """
