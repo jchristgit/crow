@@ -16,7 +16,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 - Connection worker processes are no longer spawned under a supervisor. This
   also fixes the issue of one connection terminating also terminating other
   connections.
-- Implementing `Crow.Plugin.Name/0` is now mandatory.
+- Implementing `Crow.Plugin.name/0` is now mandatory.
 
 ### Fixed
 - Application configuration is now pulled via the `:crow` application key (in
