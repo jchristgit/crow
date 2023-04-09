@@ -17,7 +17,7 @@ defmodule Crow.Worker do
     {:ok, {ip, port}} = :inet.peername(conn)
     {:ok, hostname} = :inet.gethostname()
     :ok = :gen_tcp.send(conn, '# munin node at #{hostname}\n')
-    Logger.debug("CONNECT TCP peer #{:inet.ntoa(ip)}:#{port}.")
+    Logger.debug("accepted connection from #{:inet.ntoa(ip)}:#{port}.")
     {:noreply, conn}
   end
 

@@ -4,8 +4,8 @@ defmodule Crow.MixProject do
   def project do
     [
       app: :crow,
-      version: "0.1.3",
-      elixir: "~> 1.8",
+      version: "0.1.4",
+      elixir: "~> 1.12",
       start_permanent: Mix.env() == :prod,
       source_url: "https://github.com/jchristgit/crow",
       homepage_url: "https://github.com/jchristgit/crow",
@@ -27,17 +27,18 @@ defmodule Crow.MixProject do
   defp deps do
     [
       # Linting dependencies
-      {:credo, "~> 1.0", only: :dev, runtime: false},
-      {:dialyxir, "~> 1.0.0-rc.6", only: :dev, runtime: false},
+      {:credo, "~> 1.7", only: :dev, runtime: false},
+      {:dialyxir, "~> 1.1", only: :dev, runtime: false},
 
       # Documentation dependencies
-      {:ex_doc, "~> 0.20", only: :dev, runtime: false}
+      {:ex_doc, "~> 0.28", only: :dev, runtime: false}
     ]
   end
 
   defp package do
     [
       description: "A munin node implementation written in Elixir",
+      source_ref: "master",
       licenses: ["ISC"],
       links: %{
         "Documentation" => "https://hexdocs.pm/crow",
