@@ -8,6 +8,10 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## Unreleased
 ### Changed
+
+
+## v0.1.4 - 2023-10-04
+### Changed
 - Only log peer connection in the worker, skip logging the acceptor part.
 ### Removed
 - Support for Elixir < 1.12
