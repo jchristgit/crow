@@ -8,7 +8,7 @@ implemented as modules following the `Crow.Plugin` behaviour.
 
 ## What is Munin?
 
-Quoting [the official website](http://munin-monitoring.org):
+Quoting [the official website](https://munin-monitoring.org):
 > Munin is a networked resource monitoring tool that can help analyze resource trends 
 > and "what just happened to kill our performance?" problems. It is designed to be very plug and play.
 
@@ -22,7 +22,7 @@ executables. See [Writing plugins](#writing-plugins) and the `Crow.Plugin`
 behaviour for more information.
 
 A great overview about the architecture is available at the [Munin's
-Architecture](http://guide.munin-monitoring.org/en/latest/architecture/index.html)
+Architecture](https://munin.readthedocs.io/en/latest/architecture/index.html)
 
 ## Writing plugins
 
