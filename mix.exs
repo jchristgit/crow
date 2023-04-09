@@ -38,7 +38,6 @@ defmodule Crow.MixProject do
   defp package do
     [
       description: "A munin node implementation written in Elixir",
-      source_ref: "master",
       licenses: ["ISC"],
       links: %{
         "Documentation" => "https://hexdocs.pm/crow",
@@ -50,9 +49,10 @@ defmodule Crow.MixProject do
 
   defp docs do
     [
-      main: "Introduction",
+      main: "introduction",
+      source_ref: "master",
       extras: [
-        "guides/Introduction.md"
+        "guides/introduction.md"
       ]
     ]
   end
