@@ -35,5 +35,5 @@ jobs:
         name: Lint
       - run: mix format --check-formatted
         name: Check Formatting
-      - run: mix test --no-start
+      - run: mix test
         name: Run Tests
