@@ -18,17 +18,22 @@ defmodule Crow.Worker do
     {:ok, hostname} = :inet.gethostname()
     :ok = :gen_tcp.send(conn, '# munin node at #{hostname}\n')
     Logger.debug("accepted connection from #{:inet.ntoa(ip)}:#{port}.")
-    {:noreply, conn}
+    {:noreply, {[], conn}}
   end
 
   @doc false
   @impl true
-  def handle_info({:tcp, sock, "cap" <> _rest}, state) do
-    :ok = :gen_tcp.send(sock, 'cap\n')
-    {:noreply, state}
+  def handle_info({:tcp, sock, "cap" <> requested_caps}, {used_caps, conn}) do
+    if String.contains?(requested_caps, "dirtyconfig") do
+      :ok = :gen_tcp.send(sock, 'cap dirtyconfig\n')
+      {:noreply, {[:dirtyconfig], conn}}
+    else
+      :ok = :gen_tcp.send(sock, 'cap\n')
+      {:noreply, {used_caps, conn}}
+    end
   end
 
-  def handle_info({:tcp, sock, "config " <> rest}, state) do
+  def handle_info({:tcp, sock, "config " <> rest}, {client_caps, _conn} = state) do
     plugin_name =
       rest
       |> String.trim()
@@ -42,8 +47,11 @@ defmodule Crow.Worker do
     if matching_plugin == nil do
       :gen_tcp.send(sock, '# unknown plugin\n')
     else
+      dirty_values = if :dirtyconfig in client_caps, do: matching_plugin.values(), else: []
+
       response =
         matching_plugin.config()
+        |> Kernel.++(dirty_values)
         |> Stream.intersperse('\n')
         |> Enum.to_list()
         |> :lists.concat()

@@ -29,9 +29,14 @@ defmodule Crow.WorkerTest do
   end
 
   describe "cap command" do
-    test "displays no capabilities", %{socket: socket} do
+    test "with no capabilities", %{socket: socket} do
       :ok = :gen_tcp.send(socket, 'cap\n')
       assert_receive {:tcp, ^socket, "cap\n"}
+    end
+
+    test "with dirtyconfig capability", %{socket: socket} do
+      :ok = :gen_tcp.send(socket, 'cap dirtyconfig\n')
+      assert_receive {:tcp, ^socket, "cap dirtyconfig\n"}
     end
   end
 
@@ -44,6 +49,15 @@ defmodule Crow.WorkerTest do
     test "displays unknown plugin for unknown plugins", %{socket: socket} do
       :ok = :gen_tcp.send(socket, 'config totally_not_a_plugin\n')
       assert_receive {:tcp, ^socket, "# unknown plugin\n"}
+    end
+  end
+
+  describe "dirtyconfig capability" do
+    test "adds values in config command", %{socket: socket} do
+      :ok = :gen_tcp.send(socket, 'cap dirtyconfig\n')
+      assert_receive {:tcp, ^socket, "cap dirtyconfig\n"}
+      :ok = :gen_tcp.send(socket, 'config custom_name\n')
+      assert_receive {:tcp, ^socket, "graph_title fizz buzz\nfoo.value 3\n.\n"}
     end
   end
 
