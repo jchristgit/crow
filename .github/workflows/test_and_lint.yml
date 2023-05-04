@@ -25,7 +25,9 @@ jobs:
           elixir-version: ${{ matrix.elixir-version }}
       - uses: actions/cache@v2
         with:
-          path: _build
+          path: |
+            _build
+            deps
           # Generate a hash of the OTP version and Elixir version
           key: ${{ matrix.otp-version }}-${{ matrix.elixir-version }}-mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
           restore-keys: ${{ matrix.otp-version }}-${{ matrix.elixir-version }}-mix
@@ -37,3 +39,6 @@ jobs:
         name: Check Formatting
       - run: mix test
         name: Run Tests
+      # time for the final boss
+      - run: mix dialyzer
+        name: Run dialyzer
