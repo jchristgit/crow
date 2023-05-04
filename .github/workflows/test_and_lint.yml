@@ -2,7 +2,7 @@
 name: Test & Lint
 on: [push, pull_request]
 jobs:
-  test_and_lint:
+  test:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
@@ -33,12 +33,31 @@ jobs:
           restore-keys: ${{ matrix.otp-version }}-${{ matrix.elixir-version }}-mix
       - run: mix deps.get
         name: Fetch Dependencies
+      - run: mix test
+        name: Run Tests
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: erlef/setup-beam@v1
+        with:
+          otp-version: 1.14
+          elixir-version: 25
+      - uses: actions/cache@v2
+        with:
+          path: |
+            _build
+            deps
+          # Generate a hash of the OTP version and Elixir version
+          key: mix-${{ hashFiles(format('{0}{1}', github.workspace, '/mix.lock')) }}
+          restore-keys: mix
+      - run: mix deps.get
+        name: Fetch Dependencies
       - run: mix credo --strict
         name: Lint
       - run: mix format --check-formatted
         name: Check Formatting
-      - run: mix test
-        name: Run Tests
       # time for the final boss
       - run: mix dialyzer
         name: Run dialyzer
