@@ -6,7 +6,7 @@ and this project adheres to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## Unreleased
+## v0.2.0 - 2023-05-04
 
 ### Added
 
@@ -25,9 +25,7 @@ Versioning](https://semver.org/spec/v2.0.0.html).
   ETS tables for different apps at the same time. See `crow_plugins` for more
   information.
 
-
-
-## v0.1.4 - 2023-10-04
+## v0.1.4 - 2022-10-04
 ### Changed
 - Only log peer connection in the worker, skip logging the acceptor part.
 ### Removed
