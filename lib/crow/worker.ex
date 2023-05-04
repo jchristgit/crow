@@ -2,6 +2,7 @@ defmodule Crow.Worker do
   @moduledoc false
   @version Mix.Project.config()[:version]
 
+  alias Crow.Config
   require Logger
   use GenServer
 
@@ -28,65 +29,50 @@ defmodule Crow.Worker do
     {:noreply, state}
   end
 
-  def handle_info({:tcp, sock, "config " <> rest}, state) do
-    plugin_name =
-      rest
-      |> String.trim()
-      |> to_charlist()
+  def handle_info({:tcp, sock, "config " <> name}, state) do
+    response =
+      case find_plugin(name) do
+        {plugin, options} ->
+          options
+          |> plugin.config()
+          |> Stream.intersperse('\n')
+          |> Enum.to_list()
+          |> :lists.concat()
+          |> :lists.append('\n.\n')
 
-    matching_plugin =
-      :crow
-      |> :application.get_env(:plugins, [])
-      |> Enum.find(&(&1.name() == plugin_name))
+        nil ->
+          '# unknown plugin\n'
+      end
 
-    if matching_plugin == nil do
-      :gen_tcp.send(sock, '# unknown plugin\n')
-    else
-      response =
-        matching_plugin.config()
-        |> Stream.intersperse('\n')
-        |> Enum.to_list()
-        |> :lists.concat()
-        |> :lists.append('\n.\n')
-
-      :ok = :gen_tcp.send(sock, response)
-    end
+    :ok = :gen_tcp.send(sock, response)
 
     {:noreply, state}
   end
 
-  def handle_info({:tcp, sock, "fetch " <> rest}, state) do
-    plugin_name =
-      rest
-      |> String.trim()
-      |> to_charlist()
+  def handle_info({:tcp, sock, "fetch " <> name}, state) do
+    response =
+      case find_plugin(name) do
+        {plugin, options} ->
+          options
+          |> plugin.values()
+          |> Stream.intersperse('\n')
+          |> Enum.to_list()
+          |> :lists.concat()
+          |> :lists.append('\n.\n')
 
-    matching_plugin =
-      :crow
-      |> :application.get_env(:plugins, [])
-      |> Enum.find(&(&1.name() == plugin_name))
+        nil ->
+          '# unknown plugin\n'
+      end
 
-    if matching_plugin == nil do
-      :gen_tcp.send(sock, '# unknown plugin\n.\n')
-    else
-      response =
-        matching_plugin.values()
-        |> Stream.intersperse('\n')
-        |> Enum.to_list()
-        |> :lists.concat()
-        |> :lists.append('\n.\n')
-
-      :ok = :gen_tcp.send(sock, response)
-    end
+    :ok = :gen_tcp.send(sock, response)
 
     {:noreply, state}
   end
 
   def handle_info({:tcp, sock, "list" <> _rest}, state) do
     plugin_line =
-      :crow
-      |> :application.get_env(:plugins, [])
-      |> Stream.map(& &1.name())
+      Config.list()
+      |> Stream.map(fn {plugin, options} -> plugin.name(options) end)
       |> Stream.intersperse(' ')
       |> Enum.to_list()
       |> :lists.concat()
@@ -127,5 +113,13 @@ defmodule Crow.Worker do
   def handle_info({:tcp_closed, _sock}, state) do
     Logger.debug("Peer disconnected.")
     {:stop, :normal, state}
+  end
+
+  @spec find_plugin(String.t()) :: Config.plugin_with_options() | nil
+  defp find_plugin(name) do
+    name
+    |> String.trim()
+    |> to_charlist()
+    |> Config.find()
   end
 end

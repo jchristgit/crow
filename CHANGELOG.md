@@ -7,7 +7,24 @@ Versioning](https://semver.org/spec/v2.0.0.html).
 
 
 ## Unreleased
-### Changed
+
+### Added
+
+- Plugins can now accept configuration options. **Note this requires each
+  plugin, even if not using options, to accept an additional argument in
+  `c:name/1`, `c:config/1` and `c:values/1`**.
+
+- Added the `Crow.Plugin.options` type.
+
+- Added the `Crow.Config` module that helps with finding plugins.
+
+## Changed
+
+- Every plugin is now passed options in all of its functions. This can be used
+  to, for example, configure the same ETS table plugin that monitors different
+  ETS tables for different apps at the same time. See `crow_plugins` for more
+  information.
+
 
 
 ## v0.1.4 - 2023-10-04

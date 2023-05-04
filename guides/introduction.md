@@ -33,11 +33,11 @@ in the BEAM:
 
 ```elixir
 defmodule MyApp.CrowPlugins.Processes do
-  def name do
+  def name(_options) do
     'beam_process_count'
   end
 
-  def config do
+  def config(_options) do
     [
       'graph_title Total processes',
       'graph_category BEAM',
@@ -46,7 +46,7 @@ defmodule MyApp.CrowPlugins.Processes do
     ]
   end
 
-  def values do
+  def values(_options) do
     [
       'processes.value #{length(:erlang.processes())}'
     ]
@@ -76,6 +76,15 @@ crow:
     plugins: [
       CrowPlugins.BEAM.Memory,
       CrowPlugins.BEAM.SystemInfo
+    ]
+  ```
+  Plugins can also take options. For example, a plugin that receives mnesia
+  table names to be shown in statistics could be configured like this:
+  ```elixir
+  # config/config.exs
+  config :crow,
+    plugins: [
+      {App.CrowPlugins.MnesiaTableSize, tables: [:users, :groups]}
     ]
   ```
 

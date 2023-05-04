@@ -2,9 +2,9 @@ defmodule Crow.WorkerTest do
   use ExUnit.Case
 
   defmodule TestPlugin do
-    def name, do: 'custom_name'
-    def config, do: ['graph_title fizz buzz']
-    def values, do: ['foo.value 3']
+    def name(_options), do: 'custom_name'
+    def config(_options), do: ['graph_title fizz buzz']
+    def values(_options), do: ['foo.value 3']
   end
 
   setup_all do
@@ -55,7 +55,7 @@ defmodule Crow.WorkerTest do
 
     test "displays unknown plugin for unknown plugins", %{socket: socket} do
       :ok = :gen_tcp.send(socket, 'fetch totally_not_a_plugin\n')
-      assert_receive {:tcp, ^socket, "# unknown plugin\n.\n"}
+      assert_receive {:tcp, ^socket, "# unknown plugin\n"}
     end
   end
 

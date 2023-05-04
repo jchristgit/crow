@@ -18,25 +18,36 @@ defmodule Crow.Plugin do
 
   This is the foundation from which plugins are developed. Since our node runs in
   the BEAM, we've taken a different approach here. Instead of being executable shell
-  scripts, crow plugins are modules which provide two main functions:
+  scripts, crow plugins are modules which provide three functions:
 
-  - `c:config/0`, which returns the configuration of the plugin, corresponding to
-    the first invocation form described above.
+  - `c:name/1`, which returns the name of the plugin shown to Munin. This must
+  be unique amongst all plugins configured on the node.
 
-  - `c:values/0`, which returns the values of the plugin, corresponding to the
-    second invocation form described above.
+  - `c:config/1`, which returns the configuration of the plugin, corresponding
+  to the first invocation form described above.
 
-  Instead of printing to standard output, these return a list of charlists which
-  is then sent to the peer via TCP.
+  - `c:values/1`, which returns the values of the plugin, corresponding to the
+  second invocation form described above.
 
-  An additional callback, `c:name/0`, specifies the name of the plugin shown to
-  Munin. This must be unique amongst all plugins configured on the node.
+  These take a single argument, namely the plugin options as specified in the
+  crow settings, see `t:options/0`. If your plugin has no configuration
+  options, it is safe to ignore this value. Instead of printing to standard
+  output, these return a list of charlists which is then sent to the peer via
+  TCP.
 
   ## Community plugins
 
   Plugins for the crow node can be found in the
   [`crow_plugins`](https://github.com/jchristgit/crow_plugins) repository.
   """
+
+  @typedoc """
+  Options passed to the plugin, generally per configuration in `Crow`.
+
+  If no options were passed, this will be an empty list.
+  """
+  @typedoc since: "0.2.0"
+  @type options :: Keyword.t()
 
   @doc """
   Display the configuration for this plugin.
@@ -49,7 +60,7 @@ defmodule Crow.Plugin do
 
   ## Example
 
-      def config do
+      def config(_opts) do
         [
           'graph_title Total processes',
           'graph_category BEAM',
@@ -58,29 +69,29 @@ defmodule Crow.Plugin do
         ]
       end
   """
-  @callback config() :: [charlist()]
+  @callback config(options()) :: [charlist()]
 
   @doc """
   Display values for this plugin.
 
   ## Example
 
-      def values do
+      def values(_opts) do
         [
           'processes.value #\{length(:erlang.processes())\}'
         ]
       end
   """
-  @callback values() :: [charlist()]
+  @callback values(options()) :: [charlist()]
 
   @doc """
   Return the name of the plugin displayed to peers.
 
   ## Example
 
-      def name do
+      def name(_opts) do
         'my_plugin'
       end
   """
-  @callback name() :: charlist()
+  @callback name(options()) :: charlist()
 end
