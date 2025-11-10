@@ -17,7 +17,7 @@ defmodule Crow.Worker do
   def handle_continue(:send_banner, conn) do
     {:ok, {ip, port}} = :inet.peername(conn)
     {:ok, hostname} = :inet.gethostname()
-    :ok = :gen_tcp.send(conn, '# munin node at #{hostname}\n')
+    :ok = :gen_tcp.send(conn, ~c"# munin node at #{hostname}\n")
     Logger.debug("accepted connection from #{:inet.ntoa(ip)}:#{port}.")
     {:noreply, conn}
   end
@@ -25,7 +25,7 @@ defmodule Crow.Worker do
   @doc false
   @impl true
   def handle_info({:tcp, sock, "cap" <> _rest}, state) do
-    :ok = :gen_tcp.send(sock, 'cap\n')
+    :ok = :gen_tcp.send(sock, ~c"cap\n")
     {:noreply, state}
   end
 
@@ -35,13 +35,13 @@ defmodule Crow.Worker do
         {plugin, options} ->
           options
           |> plugin.config()
-          |> Stream.intersperse('\n')
+          |> Stream.intersperse(~c"\n")
           |> Enum.to_list()
           |> :lists.concat()
-          |> :lists.append('\n.\n')
+          |> :lists.append(~c"\n.\n")
 
         nil ->
-          '# unknown plugin\n'
+          ~c"# unknown plugin\n"
       end
 
     :ok = :gen_tcp.send(sock, response)
@@ -55,13 +55,13 @@ defmodule Crow.Worker do
         {plugin, options} ->
           options
           |> plugin.values()
-          |> Stream.intersperse('\n')
+          |> Stream.intersperse(~c"\n")
           |> Enum.to_list()
           |> :lists.concat()
-          |> :lists.append('\n.\n')
+          |> :lists.append(~c"\n.\n")
 
         nil ->
-          '# unknown plugin\n'
+          ~c"# unknown plugin\n"
       end
 
     :ok = :gen_tcp.send(sock, response)
@@ -73,10 +73,10 @@ defmodule Crow.Worker do
     plugin_line =
       Config.list()
       |> Stream.map(fn {plugin, options} -> plugin.name(options) end)
-      |> Stream.intersperse(' ')
+      |> Stream.intersperse(~c" ")
       |> Enum.to_list()
       |> :lists.concat()
-      |> :lists.append('\n')
+      |> :lists.append(~c"\n")
 
     :ok = :gen_tcp.send(sock, plugin_line)
     {:noreply, state}
@@ -84,12 +84,12 @@ defmodule Crow.Worker do
 
   def handle_info({:tcp, sock, "nodes\n"}, state) do
     {:ok, hostname} = :inet.gethostname()
-    :ok = :gen_tcp.send(sock, '#{hostname}\n.\n')
+    :ok = :gen_tcp.send(sock, ~c"#{hostname}\n.\n")
     {:noreply, state}
   end
 
   def handle_info({:tcp, sock, "version\n"}, state) do
-    :ok = :gen_tcp.send(sock, 'crow node version #{@version}\n')
+    :ok = :gen_tcp.send(sock, ~c"crow node version #{@version}\n")
     {:noreply, state}
   end
 
@@ -104,7 +104,7 @@ defmodule Crow.Worker do
     :ok =
       :gen_tcp.send(
         sock,
-        '# unknown command. try cap, config, fetch, list, nodes, version, quit\n'
+        ~c"# unknown command. try cap, config, fetch, list, nodes, version, quit\n"
       )
 
     {:noreply, state}
