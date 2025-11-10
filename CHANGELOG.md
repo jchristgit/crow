@@ -6,6 +6,14 @@ and this project adheres to [Semantic
 Versioning](https://semver.org/spec/v2.0.0.html).
 
 
+## v0.2.1 - 2025-11-10
+
+### Changed
+
+- Fixed deprecation warnings on newer Elixir versions due to single-quote
+  charlists.
+
+
 ## v0.2.0 - 2023-05-04
 
 ### Added
